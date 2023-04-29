@@ -1,0 +1,25 @@
+config:
+  target: "https://http.cat/"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+      name: Artillery Test
+  plugins:
+    ensure: {}
+  ensure:
+    thresholds: 
+      - http.response_time.p95: 1200
+    conditions:
+      - expression: vusers.failed == 0
+      - expression: http_req_failed == 0
+scenarios:
+  - name: Getting a resource
+    flow:
+      - get:
+          url: "{{ target }}get"
+      - post:
+          url: "{{ target }}post"
+          json:
+            name: "Mantla"
+          payload:
+            path: "./catdata.json"
